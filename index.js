@@ -86,13 +86,13 @@ server.post("/posts", (req, res) => {
   const post = req.body;
   db("posts")
     .insert({
-      spotify_id: post.spotify_id,
-      post: post.content
+      user_spotify_id: post.user_spotify_id,
+      content: post.content
     })
     .then(ids => {
       res.status(201).json(ids[0]);
     })
-    .catch(err => res.status(500).json(err));
+    .catch(err => console.log(err));
 });
 
 // get post for specific user
@@ -101,7 +101,5 @@ server.get("/users/:spotify_id/posts", (req, res) => {
 });
 
 let port = process.env.PORT || 8888;
-console.log(
-  `Listening on port ${port}. Go /login to initiate authentication flow.`
-);
+console.log(`Listening on port ${port}.`);
 server.listen(port);
