@@ -83,16 +83,28 @@ server.get("/users/:spotify_id", (req, res) => {
 
 // post post
 server.post("/posts", (req, res) => {
+  console.log(req.body);
   const post = req.body;
   db("posts")
     .insert({
       user_spotify_id: post.user_spotify_id,
-      content: post.content
+      user_display_name: post.user_display_name,
+      content: post.content,
+      created_at: post.created_at
     })
     .then(ids => {
       res.status(201).json(ids[0]);
     })
     .catch(err => console.log(err));
+});
+
+// get posts
+server.get("/posts", (req, res) => {
+  db("posts")
+    .then(posts => res.status(200).json(posts))
+    .catch(err => {
+      res.status(500).json(err);
+    });
 });
 
 // get post for specific user

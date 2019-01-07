@@ -6,6 +6,11 @@ exports.up = function(knex, Promise) {
       .references("spotify_id")
       .inTable("users")
       .notNullable();
+    tbl
+      .string("user_display_name")
+      .references("display_name")
+      .inTable("users")
+      .notNullable();
     tbl.string("content").notNullable();
     tbl.timestamp("created_at", 6);
   });
