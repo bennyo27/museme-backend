@@ -56,6 +56,8 @@ server.get("/callback", function(req, res) {
   });
 });
 
+//-----------------CRUD for users------------------------
+
 // post user
 server.post("/users", (req, res) => {
   const user = req.body;
@@ -71,12 +73,16 @@ server.post("/users", (req, res) => {
     });
 });
 
-// get user by spotify id
-server.get("/users/:spotify_id", (req, res) => {
-  const { spotify_id } = req.params;
+// get user by display_name
+server.get("/users/:display_name", (req, res) => {
+  console.log(req.params);
+  const { display_name } = req.params;
   db("users")
-    .where({ spotify_id })
-    .then(users => res.status(200).json(users));
+    .where({ display_name })
+    .then(users => res.status(200).json(users))
+    .catch(err => {
+      res.status(500).json(err);
+    });
 });
 
 //-----------------CRUD for posts------------------------
@@ -109,7 +115,32 @@ server.get("/posts", (req, res) => {
 
 // get post for specific user
 server.get("/users/:spotify_id/posts", (req, res) => {
-  console.log(res);
+  // console.log(res);
+});
+
+//-----------------CRUD for follows------------------------
+
+// post followship
+// both follower and followee are display names
+server.post("/users/:follower/follows/:followee", (req, res) => {
+  console.log(req.params);
+  const follower = req.params.follower;
+  const followee = req.params.followee;
+  db("follows")
+    .insert({ follower, followee })
+    .then(ids => {
+      res.status(201).json(ids[0]);
+    })
+    .catch(err => res.status.json(err));
+});
+
+// get all followships
+server.get("/follows", (req, res) => {
+  db("follows")
+    .then(follows => res.status(200).json(follows))
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 let port = process.env.PORT || 8888;
