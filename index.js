@@ -75,7 +75,6 @@ server.post("/users", (req, res) => {
 
 // get user by display_name
 server.get("/users/:display_name", (req, res) => {
-  console.log(req.params);
   const { display_name } = req.params;
   db("users")
     .where({ display_name })
@@ -116,6 +115,35 @@ server.get("/posts", (req, res) => {
 // get post for specific user
 server.get("/users/:spotify_id/posts", (req, res) => {
   // console.log(res);
+});
+
+// get user feed(user posts and followers posts)
+server.get("/posts/:user_display_name", (req, res) => {
+  const { user_display_name } = req.params;
+  var follow_posts = [];
+  var user_posts = [];
+  var news_feed = [];
+  db("follows")
+    .where({ follower: user_display_name })
+    .then(followees => {
+      for (let i = 0; i < followees.length; i++) {
+        console.log(followees[i].followee);
+        db("posts")
+          .where({ user_display_name: followees[i].followee })
+          .then(followee_posts => {
+            follow_posts = followee_posts;
+          });
+      }
+      db("posts")
+        .where({ user_display_name })
+        .then(posts => {
+          user_posts = posts;
+          news_feed = follow_posts.concat(user_posts);
+          console.log(news_feed);
+          res.status(200).json(news_feed);
+        });
+    })
+    .catch(err => console.log(err));
 });
 
 //-----------------CRUD for follows------------------------
