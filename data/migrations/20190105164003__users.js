@@ -13,6 +13,7 @@ exports.up = function(knex, Promise) {
       .string("spotify_id")
       .notNullable()
       .unique();
+    tbl.string("image").notNullable();
     tbl.timestamp("created_at", 6);
   });
 };

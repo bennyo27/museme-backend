@@ -88,12 +88,12 @@ server.get("/users/:display_name", (req, res) => {
 
 // post post
 server.post("/posts", (req, res) => {
-  console.log(req.body);
   const post = req.body;
   db("posts")
     .insert({
       user_spotify_id: post.user_spotify_id,
       user_display_name: post.user_display_name,
+      user_image: post.user_image,
       content: post.content,
       created_at: post.created_at
     })

@@ -11,6 +11,11 @@ exports.up = function(knex, Promise) {
       .references("display_name")
       .inTable("users")
       .notNullable();
+    tbl
+      .string("user_image")
+      .references("image")
+      .inTable("users")
+      .notNullable();
     tbl.string("content").notNullable();
     tbl.timestamp("created_at", 6);
   });
